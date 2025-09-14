@@ -15,7 +15,6 @@ export default function Navbar() {
     router.push('/login')
   }
 
-  // Loading state
   if (loading) {
     return (
       <nav className="bg-blue-600/95 text-white px-4 py-2 shadow-sm sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-blue-600/80">
@@ -59,7 +58,7 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              {role === 'teacher' && (
+              {role === 'teacher' ? (
                 <Link 
                   href="/teacher" 
                   className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
@@ -69,18 +68,6 @@ export default function Navbar() {
                   }`}
                 >
                   Teacher Dashboard
-                </Link>
-              )}
-              {role === 'teacher' ? (
-                <Link 
-                  href="/dashboard" 
-                  className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                    pathname === '/dashboard'
-                      ? 'bg-blue-700 text-white' 
-                      : 'text-blue-100 hover:bg-blue-700/50 hover:text-white'
-                  }`}
-                >
-                  View Dashboard
                 </Link>
               ) : (
                 <Link 
