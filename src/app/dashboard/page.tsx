@@ -4,9 +4,18 @@ import { useEffect, useState } from "react"
 import { supabase } from "../../../lib/supabaseClient"
 import { useUser } from "../context/UserContext"
 
+type ProgressRow = {
+    id: string
+    lesson: string
+    score: number
+    created_at: string
+    student_id?: string
+    student_email?: string | null
+}
+
 export default function DashboardPage() {
     const { user } = useUser();
-    const [progress, setProgress] = useState<any []>([]);
+    const [progress, setProgress] = useState<ProgressRow[]>([]);
     const [lesson, setLesson] = useState("");
     const [score, setScore] = useState("");
 
@@ -15,14 +24,14 @@ export default function DashboardPage() {
             if(!user) return;
             const { data, error } = await supabase
                 .from("progress")
-                .select("*")
+                .select("id, lesson, score, created_at, student_id, student_email")
                 .eq("student_id", user.id)
                 .order("created_at", { ascending: false })
             
             if(error) {
                 console.error(error);
             } else {
-                setProgress(data);
+                setProgress((data ?? []) as ProgressRow[]);
             }
         }
         fetchProgress();
@@ -34,13 +43,14 @@ export default function DashboardPage() {
 
         const { data, error } = await supabase
             .from("progress")
-            .insert([{ lesson, score, student_id: user.id, student_email: user.email }])
+            .insert([{ lesson, score: Number(score), student_id: user.id, student_email: user.email }])
+            .select("id, lesson, score, created_at, student_id, student_email")
 
         if(error) {
             console.error(error);
             alert("Error adding progress: " + error.message);
         } else {
-            setProgress([...(data || []), ...progress])
+            setProgress([...(data as ProgressRow[] | null ?? []), ...progress])
             setLesson("");
             setScore("");
         }

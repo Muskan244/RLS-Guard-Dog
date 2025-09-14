@@ -64,7 +64,7 @@ create table if not exists public.progress (
 3. Enable RLS and add policies that match the tests:
 - Students: can `select` rows where `student_id = auth.uid()`
 - Students: can `insert` only with `student_id = auth.uid()`
-- Students: cannot view, update or delete other users' rows
+- Students: cannot update or delete other users' rows
 - Teachers: can `select`, `insert`, `update`, `delete` all rows
 
 A common approach is to set `role` user metadata at signup (`student` or `teacher`) and use it in policy checks (e.g. via `auth.jwt()`). The integration tests expect that teachers are able to modify and delete any rows while students are restricted to their own.
@@ -72,6 +72,7 @@ A common approach is to set `role` user metadata at signup (`student` or `teache
 ## Local Development
 Install dependencies and start dev:
 ```bash
+npm install
 npm install
 npm run dev
 ```
@@ -82,3 +83,5 @@ Run the integration tests:
 ```bash
 npm run test
 ```
+Vitest configuration avoids loading PostCSS during tests to keep the runner fast and isolated:
+- `vitest.config.ts` sets `css: false` and overrides Vite `css.postcss.plugins = []`.

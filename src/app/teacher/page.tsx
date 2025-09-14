@@ -4,10 +4,19 @@ import { useEffect, useState } from "react"
 import { supabase } from "../../../lib/supabaseClient"
 import { useUser } from "../context/UserContext"
 
+type ProgressRow = {
+    id: string
+    lesson: string
+    score: number
+    created_at: string
+    student_email?: string | null
+    student_id?: string
+}
+
 export default function TeacherDashboard() {
     const { user } = useUser();
-    const [progress, setProgress] = useState<any[]>([]);
-    const [editingId, setEditingId] = useState<number | null>(null);
+    const [progress, setProgress] = useState<ProgressRow[]>([]);
+    const [editingId, setEditingId] = useState<string | null>(null);
     const [editLesson, setEditLesson] = useState("");
     const [editScore, setEditScore] = useState("");
 
@@ -21,13 +30,13 @@ export default function TeacherDashboard() {
             if(error) {
                 console.error(error);
             } else {
-                setProgress(data || []);
+                setProgress((data ?? []) as ProgressRow[]);
             }
         }
         fetchProgress();
     }, [user]);
 
-    const handleDelete = async (id: number) => {
+    const handleDelete = async (id: string) => {
         const { error } = await supabase
             .from("progress")
             .delete()
@@ -39,25 +48,25 @@ export default function TeacherDashboard() {
         } else {
             setProgress(progress.filter((p) => p.id !== id));
         }
-    }
-
-    const startEdit = (p: any) => {
-        setEditingId(p.id);
-        setEditLesson(p.lesson);
-        setEditScore(p.score);
     };
 
-    const handleUpdate = async (id: number) => {
+    const startEdit = (p: ProgressRow) => {
+        setEditingId(p.id);
+        setEditLesson(p.lesson);
+        setEditScore(String(p.score));
+    };
+
+    const handleUpdate = async (id: string) => {
         const { error } = await supabase
             .from("progress")
-            .update({ lesson: editLesson, score: editScore })
+            .update({ lesson: editLesson, score: Number(editScore) })
             .eq("id", id);
         
         if(error) {
             console.error(error);
             alert("Error updating progress: " + error.message);
         } else {
-            setProgress(progress.map((p) => p.id === id ? { ...p, lesson: editLesson, score: editScore } : p));
+            setProgress(progress.map((p) => p.id === id ? { ...p, lesson: editLesson, score: Number(editScore) } as ProgressRow : p));
             setEditingId(null);
         }
     };
@@ -86,7 +95,7 @@ export default function TeacherDashboard() {
                         </tr>
                     </thead>
                     <tbody>
-                        {progress.map((p) => (
+                        {progress.map((p: ProgressRow) => (
                             <tr key={p.id} className="odd:bg-white even:bg-gray-50 hover:bg-blue-50/60 dark:odd:bg-gray-900 dark:even:bg-gray-800 dark:hover:bg-gray-700/60 transition-colors">
                                 <td className="border px-4 py-2 dark:border-gray-700 max-w-[240px] truncate text-gray-900 dark:text-gray-100">{p.student_email || p.student_id || '—'}</td>
                                 <td className="border px-4 py-2 dark:border-gray-700">
