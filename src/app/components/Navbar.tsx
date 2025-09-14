@@ -71,16 +71,29 @@ export default function Navbar() {
                   Teacher Dashboard
                 </Link>
               )}
-              <Link 
-                href="/dashboard" 
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                  pathname === '/dashboard'
-                    ? 'bg-blue-700 text-white' 
-                    : 'text-blue-100 hover:bg-blue-700/50 hover:text-white'
-                }`}
-              >
-                {role === 'teacher' ? 'View Dashboard' : 'My Dashboard'}
-              </Link>
+              {role === 'teacher' ? (
+                <Link 
+                  href="/dashboard" 
+                  className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    pathname === '/dashboard'
+                      ? 'bg-blue-700 text-white' 
+                      : 'text-blue-100 hover:bg-blue-700/50 hover:text-white'
+                  }`}
+                >
+                  View Dashboard
+                </Link>
+              ) : (
+                <Link 
+                  href="/dashboard" 
+                  className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    pathname === '/dashboard'
+                      ? 'bg-blue-700 text-white' 
+                      : 'text-blue-100 hover:bg-blue-700/50 hover:text-white'
+                  }`}
+                >
+                  My Dashboard
+                </Link>
+              )}
               <div className="relative group">
                 <button className="flex items-center gap-1 px-3 py-1.5 rounded-md text-sm font-medium text-blue-100 hover:bg-blue-700/50 hover:text-white transition-colors">
                   <span>Account</span>
