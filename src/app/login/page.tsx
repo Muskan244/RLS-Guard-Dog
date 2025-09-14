@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { supabase } from "../../../lib/supabaseClient"
 
@@ -44,7 +44,7 @@ export default function LoginPage() {
     return (
         <div className="max-w-md mx-auto mt-20 p-6 border rounded-2xl bg-white/80 shadow-sm backdrop-blur dark:bg-gray-800/80 dark:border-gray-700">
             <h2 className="text-2xl font-bold mb-2 text-gray-900 dark:text-gray-100">Login</h2>
-            <p className="mb-4 text-sm text-gray-600 dark:text-gray-300">We'll email you a magic link to sign in.</p>
+            <p className="mb-4 text-sm text-gray-600 dark:text-gray-300">We&apos;ll email you a magic link to sign in.</p>
             <form onSubmit={handleLogin} className="space-y-4">
                 <input 
                     type="email" 
