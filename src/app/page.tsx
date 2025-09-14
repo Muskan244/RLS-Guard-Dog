@@ -1,6 +1,42 @@
-import Link from "next/link";
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useUser } from './context/UserContext';
+import Link from 'next/link';
 
 export default function Home() {
+  const { user, loading } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && user) {
+      const userRole = user.user_metadata?.role || 'student';
+      
+      if (userRole === 'teacher') {
+        router.push('/teacher');
+      } else {
+        router.push('/dashboard');
+      }
+    }
+  }, [user, loading, router]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+      </div>
+    );
+  }
+
+  if (user) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative min-h-[calc(100vh-4rem)] overflow-hidden">
       <div className="pointer-events-none absolute inset-0 -z-10">
@@ -48,12 +84,12 @@ export default function Home() {
           <div className="rounded-2xl border border-gray-200 bg-white/70 p-6 shadow-sm backdrop-blur dark:border-gray-700 dark:bg-gray-800/70">
             <div className="mb-3 inline-flex size-10 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-300">📊</div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Student Dashboard</h3>
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Track lessons and scores with a simple form and instant table updates.</p>
+            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Students can track their progress and view their own data in a clean, intuitive interface.</p>
           </div>
           <div className="rounded-2xl border border-gray-200 bg-white/70 p-6 shadow-sm backdrop-blur dark:border-gray-700 dark:bg-gray-800/70">
-            <div className="mb-3 inline-flex size-10 items-center justify-center rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-300">🧑‍🏫</div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Teacher Tools</h3>
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">View all progress, edit scores, and keep the classroom current — all from one page.</p>
+            <div className="mb-3 inline-flex size-10 items-center justify-center rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-300">👩‍🏫</div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Teacher Portal</h3>
+            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Teachers have full visibility and control over all student data and progress.</p>
           </div>
         </div>
 
